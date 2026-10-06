@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Películas{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Catálogo de Películas</h1>
+        <p class="text-muted">Selecciona un género para ver las películas disponibles.</p>
+    </div>
+</div>
+
+{% if generos %}
+    <div class="accordion" id="acordeonGeneros">
+        {% for genero in generos %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ genero.id }}">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ genero.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ genero.id }}">
+                        <strong>{{ genero.nombre }}</strong>
+                    </button>
+                </h2>
+                <div id="collapse{{ genero.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ genero.id }}" data-bs-parent="#acordeonGeneros">
+                    <div class="accordion-body bg-light">
+                        <p class="lead">{{ genero.descripcion }}</p>
+                        <hr>
+                        <div class="row">
+                            {% for pelicula in genero.peliculas %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 shadow-sm">
+                                        <img src="{% static 'images/' %}{{ pelicula.imagen }}" class="card-img-top" alt="{{ pelicula.nombre }}" style="height: 250px; object-fit: cover;">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">{{ pelicula.nombre }}</h5>
+                                            <span class="badge bg-danger fs-6">Edad: {{ pelicula.edad }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        No se encontraron géneros de películas registrados.
+    </div>
+{% endif %}
+{% endblock %}
